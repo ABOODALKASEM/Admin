@@ -1,0 +1,60 @@
+
+<ion-header class="ion-no-border" [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="primary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Drivers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment value="default" [(ngModel)]="segmentModel">
+    <ion-segment-button value="default">
+      <ion-label>Approved</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="segment">
+      <ion-label>Pending</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- No Data View -->
+  <app-no-data *ngIf="hasNoData"></app-no-data>
+
+  <!-- Loading Skeleton -->
+  <app-loading-skeleton *ngIf="hideSkeleton"></app-loading-skeleton>
+
+  <!-- Data Tables -->
+  <ng-container *ngIf="!hideSkeleton">
+    <!-- Approved Drivers Table -->
+    <app-drivers-table 
+      *ngIf="segmentModel === 'default'"
+      [dataSource]="records"
+      [displayedColumns]="displayedColumns"
+      (filterChange)="applyFilter($event)"
+      (editDriver)="EditDriver($event)"
+      (blockDriver)="BlockDriver($event)"
+      (unblockDriver)="UnBlockDriver($event)"
+      (viewDocuments)="gotoDocs($event)">
+    </app-drivers-table>
+
+    <!-- Pending Drivers Table -->
+    <app-drivers-table 
+      *ngIf="segmentModel === 'segment'"
+      [dataSource]="records2"
+      [displayedColumns]="displayedColumns2"
+      (filterChange)="applyFilter2($event)"
+      (editDriver)="EditDriver($event)"
+      (approveDriver)="Approve($event)"
+      (viewDocuments)="gotoDocs($event)">
+    </app-drivers-table>
+  </ng-container>
+</ion-content>
+
+<ion-footer>
+  <ion-fab vertical="bottom" horizontal="start" (click)="AddDriver()">
+    <ion-fab-button size="large" color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-footer>
